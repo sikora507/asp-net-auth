@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,24 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ClientId = "269492224424-9oag6eaooneq3fu8j2hu7qops3d8i5c0.apps.googleusercontent.com";
         options.ClientSecret = "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";
         options.CallbackPath = "/signin-google"; 
+        options.Events = new OAuthEvents
+        {
+            OnTicketReceived = async context =>
+            {
+                // You can access the user's email here
+                var email = context.Principal.FindFirstValue(ClaimTypes.Email);
+            
+                // Store the email in the user's claims
+                var claims = new List<Claim>
+                {
+                    new Claim("Email", email)
+                };
+                var appIdentity = new ClaimsIdentity(claims);
+                context.Principal.AddIdentity(appIdentity);
+
+                await Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
