@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
-
 [AllowAnonymous]
 [ApiController]
 [Route("[controller]")]
