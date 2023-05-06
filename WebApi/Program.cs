@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,12 +9,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthentication()
-    .AddGoogle("Google", options =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie()
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
     {
-        options.ClientId = "";
-        options.ClientSecret = "";
-        options.CallbackPath = "";
+        options.ClientId = "269492224424-ql7i9o8g3kqm8aec21396u7ajl31on46.apps.googleusercontent.com";
+        options.ClientSecret = "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";
+        options.CallbackPath = "/signin-google"; 
     });
 builder.Services.AddAuthorization();
 
