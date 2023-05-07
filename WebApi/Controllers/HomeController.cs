@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
-[AllowAnonymous]
 [ApiController]
 [Route("/")]
 public class HomeController : ControllerBase
@@ -14,8 +13,8 @@ public class HomeController : ControllerBase
         return Ok(new { Message = "Index route in HomeController" });
     }
     
-    [HttpGet("/protected")]
     [Authorize]
+    [HttpGet("/protected")]
     public IActionResult Protected()
     {
         return Ok(new { Message = "This is a protected route" });

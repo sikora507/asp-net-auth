@@ -2,20 +2,23 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+builder.Configuration.AddJsonFile("appsettings.local.json", true);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie()
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/signin";
+    })
     .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
     {
-        options.ClientId = "269492224424-ql7i9o8g3kqm8aec21396u7ajl31on46.apps.googleusercontent.com";
-        options.ClientSecret = "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";
+        options.ClientId = builder.Configuration.GetValue<string>("Authentication:Google:ClientId") ?? "";
+        options.ClientSecret = builder.Configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? "";
         options.CallbackPath = "/signin-google"; 
+        options.AuthorizationEndpoint += "?prompt=select_account";
     });
 builder.Services.AddAuthorization();
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,15 @@ public class AuthController : ControllerBase
         return Challenge(
             new AuthenticationProperties { RedirectUri = "/" },
             GoogleDefaults.AuthenticationScheme
+        );
+    }
+    
+    [HttpGet("signout")]
+    public IActionResult SignOut()
+    {
+        return SignOut(
+            new AuthenticationProperties { RedirectUri = "/" },
+            CookieAuthenticationDefaults.AuthenticationScheme
         );
     }
 }
