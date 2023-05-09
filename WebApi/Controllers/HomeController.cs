@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +11,15 @@ public class HomeController : ControllerBase
     [HttpGet]
     public IActionResult Index()
     {
-        return Ok(new { Message = "Index route in HomeController" });
+        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value;
+        return Ok(new { Message = "Index route in HomeController", Email = userEmail });
     }
     
     [Authorize]
     [HttpGet("/protected")]
     public IActionResult Protected()
     {
-        return Ok(new { Message = "This is a protected route" });
+        var userEmail = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value;
+        return Ok(new { Message = "This is a protected route", Email = userEmail });
     }
 }
